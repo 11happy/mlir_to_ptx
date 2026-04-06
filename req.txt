@@ -1,0 +1,4 @@
+ml-dtypes==0.5.4
+mlir-python-bindings==22.0.0.2025112901+cuda.9bae84b0
+numpy==2.1.2
+pyyaml==6.0.3

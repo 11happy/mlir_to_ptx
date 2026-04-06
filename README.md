@@ -1,0 +1,1 @@
+uv pip install mlir_python_bindings -f https://github.com/makslevental/mlir-wheels/releases/expanded_assets/latest
