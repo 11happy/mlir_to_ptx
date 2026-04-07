@@ -11,20 +11,16 @@ from mlir.passmanager import PassManager
 mlir_source = """
 module {
   func.func @vecadd(
-    %A: memref<128x1024xi32>,
-    %B: memref<128x1024xi32>,
-    %C: memref<128x1024xi32>
+    %A: memref<256x256xf16>,
+    %B: memref<256x256xf16>,
+    %C: memref<256x256xf16>
   ) {
-    affine.for %i = 0 to 128 {
-      affine.for %j = 0 to 1024 step 4 {
-        %base = affine.apply affine_map<(d0, d1) -> (d0 * 1024 + d1)>(%i, %j)
-        %a = vector.load %A[%i, %j] : memref<128x1024xi32>, vector<4xi32>
-        %b = vector.load %B[%i, %j] : memref<128x1024xi32>, vector<4xi32>
-        %a_f16 = vector.bitcast %a : vector<4xi32> to vector<8xf16>
-        %b_f16 = vector.bitcast %b : vector<4xi32> to vector<8xf16>
-        %sum = arith.addf %a_f16, %b_f16 : vector<8xf16>
-        %sum_i32 = vector.bitcast %sum : vector<8xf16> to vector<4xi32>
-        vector.store %sum_i32, %C[%i, %j] : memref<128x1024xi32>, vector<4xi32>
+    affine.for %i = 0 to 256 {
+      affine.for %j = 0 to 256 {
+        %a = affine.load %A[%i, %j] : memref<256x256xf16>
+        %b = affine.load %B[%i, %j] : memref<256x256xf16>
+        %sum = arith.addf %a, %b : f16
+        affine.store %sum, %C[%i, %j] : memref<256x256xf16>
       }
     }
     return
